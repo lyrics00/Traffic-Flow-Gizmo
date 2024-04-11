@@ -1,8 +1,8 @@
 import pygame
-import sys  
 from background.background_gizmo import background_setup
 from classes.car import Car
 import os
+import sys
 pygame.init()
 screen, bg, clock = background_setup(pygame.display.set_mode((600, 480)), "./background.png")
 # Your main game logic goes here

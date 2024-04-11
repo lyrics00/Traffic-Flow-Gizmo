@@ -2,7 +2,7 @@ import pygame
 
 def background_setup(screen, img_path):
     pygame.init()
-    screen = pygame.display.set_mode((600, 480))
+    screen = pygame.display.set_mode((1180, 820))
     bg = pygame.image.load(img_path)
 
     clock = pygame.time.Clock()
