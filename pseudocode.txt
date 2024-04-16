@@ -1,1 +1,36 @@
 we pseudocoding
+
+code for checking if two cars have collided: 
+    calculate minimumPosition and maximumPosition using certain distance factor (ex. 30 pixels) // since position is denoted from the center of the car, 
+                                                                                                // we need to account for the space the car actually takes up
+    if car1's x position >= car2's minimumPosition && car1's x position <= car2's maximumPosition:
+        stop movements of both cars
+        stop all gizmo processes
+        show crash image
+        put up error message that a crash has occurred, prompt the student to try again and restart the gizmo 
+
+code for "placing" stop signs/traffic light:
+    student clicks on the stop sign/traffic light graphic
+    image automatically shows up on the intersection
+    if student clicks again the stop sign/traffic light goes to another prespecified location
+    (this plan eliminates any complexity associated with dragging and dropping)
+
+code for calculating average commute time:
+    create arbitrary minimum commute time (ex. 10 minutes) for students to strive toward
+    for each car:
+        count the amount of time the car waits at the red light
+    find average time from all cars
+
+    // visual idea: the average commute time can be printed in a certain color denoting how close they are to the minimum (red -> orange -> yellow -> green)
+
+code for turning car left or right:
+    deltaTheta = 90 (or -90 depending on direction)
+    while (counter < 90) (or counter > -90)
+        car.angle += 10 (or another number that creates a smoother-looking turn)
+        counter += 10
+        car.show 
+
+        (idk if this makes sense)
+
+code for car movement depending on light color:
+    TO BE WRITTEN 
