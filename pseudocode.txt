@@ -1,4 +1,36 @@
-we pseudocoding
+########################################
+UI/Visuals
+########################################
+background
+    //place both backgrounds
+    roadWithoutStopSigns = x width, y height
+    show(roadWithoutStopSigns)
+    roadWithStopSigns = x width, y height
+    hide(roadWithStopSigns)
+
+traffic lights
+    //place invisible traffic lights at each intersection
+    trafficLights[8]
+    set each light to a lane before the intersection
+    make traffic light at the start of the intersection for each lane
+    hide(trafficLights)
+
+STOP SIGNS TAB
+if(stopSignTab)
+    if(buttonForStopSigns==pressed):
+        show(stopSigns)
+TRAFFIC LIGHTS TAB
+if(trafficLightsTab)
+    hide(roadWithStopSigns)
+    show(roadWithoutStopSigns)
+    show(trafficLights[0,3,6,9])
+    if(buttonForStopLights==pressed):
+        show(light)
+
+
+########################################
+Cars
+########################################
 
 code for checking if two cars have collided: 
     calculate minimumPosition and maximumPosition using certain distance factor (ex. 30 pixels) // since position is denoted from the center of the car, 
@@ -8,12 +40,6 @@ code for checking if two cars have collided:
         stop all gizmo processes
         show crash image
         put up error message that a crash has occurred, prompt the student to try again and restart the gizmo 
-
-code for "placing" stop signs/traffic light:
-    student clicks on the stop sign/traffic light graphic
-    image automatically shows up on the intersection
-    if student clicks again the stop sign/traffic light goes to another prespecified location
-    (this plan eliminates any complexity associated with dragging and dropping)
 
 code for calculating average commute time:
     create arbitrary minimum commute time (ex. 10 minutes) for students to strive toward
