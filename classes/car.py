@@ -58,6 +58,7 @@ class Car:
             # If the car is outside the lane boundaries, move it back inside
             self.x -= self.speed * math.cos(math.radians(self.angle))
             self.y += self.speed * math.sin(math.radians(self.angle))
-
+    def GetNextLane(self, intersection: Intersection):
+        self.lane = intersection.roads[0].lanes[0]
     def StartTurning(self):
         self.turning = True
