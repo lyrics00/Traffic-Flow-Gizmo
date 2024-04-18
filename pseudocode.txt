@@ -35,6 +35,9 @@ code for turning car left or right:
 code for car movement depending on light color:
     TO BE WRITTEN
 
+code to speed up/slow down car:
+    
+
 code for car generation in each lane:
     for the highway straight lanes:
         a car is generated once every x seconds, where x is a uniform continuous RV

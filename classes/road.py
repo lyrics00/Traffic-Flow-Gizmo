@@ -1,5 +1,5 @@
 import pygame
-from car import Car
+from classes.car import Car
 class Lane(pygame.sprite.Sprite):
     def __init__(self, lane_number: int, x_position: int, y_position: int, width: int, height: int, orientation: str, turn_direction='straight',):
         super().__init__()
