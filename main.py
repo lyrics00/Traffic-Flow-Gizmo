@@ -7,7 +7,7 @@ import sys
 from pygame.sprite import Sprite, Group
 import threading
 pygame.init()
-screen, bg, clock = background_setup(pygame.display.set_mode((1920, 1080)), "./background.png")
+screen, bg, clock = background_setup(pygame.display.set_mode((1180, 800)), "./background.png")
 '''
     initialize()
     theoretically, we want a function that will initialize the screen with the background and the roads.
