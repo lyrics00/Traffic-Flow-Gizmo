@@ -9,7 +9,8 @@ import random
 pygame.init()
 from pygame.locals import *
 flags = DOUBLEBUF
-screen, img, clock = background_setup((1150,820), flags, 16)
+#  actual resolution is (1180, 800)
+screen, bg, img_x, img_y, clock = background_setup((1180, 800), flags, 16)
 screen.set_alpha(None)
 cimg1 = pygame.image.load("car1.png").convert_alpha()
 cimg1rect = cimg1.get_rect()
@@ -22,25 +23,33 @@ speed = 1.5
 '''
 # Your main game logic goes here
 # For example:
-def run_game(screen, bg, clock):
+def run_game(screen, bg, img_x, img_y, clock):
     pygame.mouse.set_visible(0)
     pygame.display.set_caption('Gizmo')# fix indentation
     #lane width is 120 pixels
     # def __init__(self, num_lanes: int, lane_height: int, lane_width: int, road_x_position: int, road_y_position: int, lane_directions: list[str], orientation: str):
-    road1 = Road(num_lanes=3, lane_height=100, lane_width=120, road_x_position=315, road_y_position=-250, lane_directions=["straight", "straight", "straight"], orientation="down")
-    road2 = Road(num_lanes=2, lane_height=120, lane_width=100, road_x_position=1000, road_y_position=-400, lane_directions=["straight", "straight", "straight"], orientation="left")
+    road1 = Road(num_lanes=3, lane_height=100, lane_width=130, road_x_position=210, road_y_position=-250, lane_directions=["straight", "straight", "straight"], orientation="down")
+    road2 = Road(num_lanes=1, lane_height=100, lane_width=130, road_x_position=1050, road_y_position=220, lane_directions=["straight"], orientation="left")
+    road3 = Road(num_lanes=3, lane_height=100, lane_width=100, road_x_position=440, road_y_position=800, lane_directions=["straight", "straight", "straight"], orientation="up")
+    road4 = Road(num_lanes=1, lane_height=100, lane_width=100, road_x_position=-300, road_y_position=160, lane_directions=["straight"], orientation="right")
     # Assuming road1.lanes is a Group containing Lane sprites
     intersection1 = Intersection()
     intersection1.add_road(road1)
     intersection1.add_road(road2)
+    intersection1.add_road(road3)
+    intersection1.add_road(road4)  
     # Get a list of Lane sprites from the Group
 # Check if there are any Lane sprites in the list
     # def __init__ (self, imageFile, x, y, speed, intersection: Intersection, road: Road, lane_num: int):
     cars = []
     c1 = Car(cimg1, speed=speed, intersection=intersection1, road=road1, lane_num=0)
     cars.append(c1)
-    c2 = Car(cimg2, speed=speed, intersection=intersection1, road=road1, lane_num=1)
+    c2 = Car(cimg2, speed=speed, intersection=intersection1, road=road2, lane_num=0)
     cars.append(c2)
+    c3 = Car(cimg1, speed=speed, intersection=intersection1, road=road3, lane_num=0)
+    cars.append(c3)
+    c4 = Car(cimg2, speed=speed, intersection=intersection1, road=road4, lane_num=0)
+    cars.append(c4)
     # Start all car threads
 
     # Join all car threads to wait for them to finish
@@ -50,12 +59,15 @@ def run_game(screen, bg, clock):
     while True:
         pygame.display.update()
         clock.tick(60)
-        screen.blit(bg, (0, 0))
+        screen.blit(bg, (img_x, img_y))
         c1.Show(screen)  
         c2.Show(screen)
+        c3.Show(screen)
+        c4.Show(screen)
         c1.Move()
         c2.Move()
-        cars = DeleteCars(cars)
+        c3.Move()
+        c4.Move()
         '''
         update()
         Theoretically, we should just have a update function in the loop that organizes everything we want to update during each frame.
@@ -95,7 +107,7 @@ def GenerateCars(list: list[Car]):
 def DeleteCars(list: list[Car]):
     for car in list:
         [screen_x, screen_y] = screen.get_size()
-        if screen_x < car.x or 0 > car.x or car.y > screen_y or car.y < 0:
+        if screen_x < car.x or -500 > car.x or car.y > screen_y or car.y < -500:
             list.remove(car)
     return list
     
@@ -103,4 +115,4 @@ def DeleteCars(list: list[Car]):
 
 
 
-run_game(screen, img, clock)
+run_game(screen, bg, img_x, img_y, clock)

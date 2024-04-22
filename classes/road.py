@@ -49,18 +49,28 @@ class Road(pygame.sprite.Sprite):
                     lanes.add(lane)
                 else:
                     lane = Lane(i, (i * self.lane_width) + self.road_x_position, self.road_y_position, self.lane_width, self.lane_height, self.orientation, turn_direction="straight")
+                    lanes.add(lane)
             elif self.orientation == 'right':
                 if self.lane_directions[i] == 'straight-right' or self.lane_directions[i] == 'right' or self.lane_directions[i] == 'left' or self.lane_directions[i] == 'straight':
                     lane = Lane(i, self.road_x_position, (i * self.lane_height) + self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.lane_directions[i])
                     lanes.add(lane)
                 else:
                     lane = Lane(i, self.road_x_position, (i * self.lane_height) + self.road_y_position, self.lane_width, self.lane_height, self.orientation, turn_direction="straight")
+                    lanes.add(lane)
             elif self.orientation == 'down':
                 if self.lane_directions[i] == 'straight-right' or self.lane_directions[i] == 'right' or self.lane_directions[i] == 'left' or self.lane_directions[i] == 'straight':
                     lane = Lane(i, -(i * self.lane_width) + self.road_x_position, self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.lane_directions[i])
                     lanes.add(lane)
                 else:
                     lane = Lane(i, -(i * self.lane_width) + self.road_x_position, self.road_y_position, self.lane_width, self.lane_height, self.orientation, turn_direction="straight")
+                    lanes.add(lane)
+            elif self.orientation == 'left':
+                if self.lane_directions[i] == 'straight-right' or self.lane_directions[i] == 'right' or self.lane_directions[i] == 'left' or self.lane_directions[i] == 'straight':
+                    lane = Lane(i, self.road_x_position, -(i * self.lane_height) + self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.lane_directions[i])
+                    lanes.add(lane)
+                else:
+                    lane = Lane(i, self.road_x_position, -(i * self.lane_height) + self.road_y_position, self.lane_width, self.lane_height, self.orientation, turn_direction='straight')
+                    lanes.add(lane)
         return lanes
 class Intersection:
     def __init__(self):
