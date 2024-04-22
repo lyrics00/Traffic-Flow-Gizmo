@@ -3,21 +3,21 @@ import math
 from classes.road import Intersection, Road, Lane
 
 class Car:
-    def __init__ (self, imageFile, x, y, speed, intersection: Intersection, road: Road, lane_num: int):
-        self.x = x
-        self.y = y
+    def __init__ (self, imageFile, speed, intersection: Intersection, road: Road, lane_num: int):
         self.speed = speed
-        self.image = pygame.image.load(imageFile)
+        self.image = imageFile
         self.intersection = intersection
         self.road = road
         self.lane = self.GetCarLane(lane_num)
+        self.x = self.lane.x_position
+        self.y = self.lane.y_position
         self.turning_rate = 2  # Turning rate in degrees per frame
         self.turning = False  # Flag to indicate if the car is currently turning
         self.thread = None
         self.angle = self.Direction()
 
     def Show(self, surface):
-        rotated_image = pygame.transform.rotate(self.image, float(self.angle))  # Rotate the car image based on the angle
+        rotated_image = pygame.transform.rotate(self.image, float(self.angle+90))  # Rotate the car image based on the angle
         rect = rotated_image.get_rect(center=self.image.get_rect(topleft=(self.x, self.y)).center)  # Center the rotated image
         surface.blit(rotated_image, rect.topleft)  # Blit the rotated image onto the screen
 
@@ -69,22 +69,28 @@ class Car:
     def Stop():
         return
     def Direction(self):
-        if self.road.orientation == "down":
-            angle = 270
-        if self.road.orientation == "up":
-            angle = 90
-        if self.road.orientation == "right":
-            angle = 0
-        if self.road.orientation == "left":
-            angle = 180
+        # Check if the car is turning
+        if self.turning:
+            if self.lane.turn_direction == 'right':
+                self.angle -= self.turning_rate  # Turn right by decreasing angle
+            elif self.lane.turn_direction == 'left':
+                self.angle += self.turning_rate  # Turn left by increasing angle
+
+            # Limit the angle within 0 to 360 degrees
+            self.angle %= 360
+
+        # Set the initial angle based on road orientation if not turning
         else:
-            angle = 0
-        return angle
+            if self.road.orientation == "down":
+                self.angle = 270
+            elif self.road.orientation == "up":
+                self.angle = 90
+            elif self.road.orientation == "right":
+                self.angle = 0
+            elif self.road.orientation == "left":
+                self.angle = 180
+            else:
+                self.angle = 0
 
+        return self.angle
 # Car thread method outside of car class
-
-def car_thread(car):
-    clock = pygame.time.Clock()
-    while True:
-        car.Move()
-        clock.tick(15)  # Adjust as needed for desired framerate
