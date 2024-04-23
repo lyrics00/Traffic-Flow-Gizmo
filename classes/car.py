@@ -2,25 +2,30 @@ import pygame
 import math
 from classes.road import Intersection, Road, Lane
 
-class Car:
+class Car(pygame.sprite.Sprite):
     def __init__ (self, imageFile, speed, intersection: Intersection, road: Road, lane_num: int):
+        super().__init__()
         self.speed = speed
-        self.image = imageFile
+        self.image = imageFile #300 by 400 pixels
         self.intersection = intersection
+        self.rect = self.image.get_rect()
         self.road = road
         self.lane = self.GetCarLane(lane_num)
         self.x = self.lane.x_position
         self.y = self.lane.y_position
+        self.rect.topleft = (self.x, self.y)
         self.turning_rate = 2  # Turning rate in degrees per frame
         self.turning = False  # Flag to indicate if the car is currently turning
         self.thread = None
         self.angle = self.Direction()
-
-    def Show(self, surface):
         rotated_image = pygame.transform.rotate(self.image, float(self.angle+90))  # Rotate the car image based on the angle
-        rect = rotated_image.get_rect(center=self.image.get_rect(topleft=(self.x, self.y)).center)  # Center the rotated image
-        surface.blit(rotated_image, rect.topleft)  # Blit the rotated image onto the screen
-
+        self.rect = rotated_image.get_rect(topleft=(self.x, self.y))
+        self.image = rotated_image  
+        # Center the rotated image
+        # Blit the rotated image onto the screen
+    def ShowScreen(self, surface, rotated_image):
+        surface.blit(rotated_image, self.rect.topleft) 
+    
     def UpdateCoords(self, x,y):
         self.x = x
         self.y = y
@@ -34,6 +39,8 @@ class Car:
     # if self.lane.collidepoint(next_x, next_y):
         self.x = next_x
         self.y = next_y
+        self.rect.topleft = (self.x, self.y)
+        #
         #else:
         #   self.StartTurning()  # Set turning flag to True when reaching the end of the lane
 
@@ -93,4 +100,7 @@ class Car:
                 self.angle = 0
 
         return self.angle
+
+    
+
 # Car thread method outside of car class
