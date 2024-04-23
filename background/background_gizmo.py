@@ -8,7 +8,7 @@ def background_setup(screen, flags, bpp):
     screen_width, screen_height = screen_info.current_w, screen_info.current_h
     screen = pygame.display.set_mode(screen, flags, bpp)
 
-    img = pygame.image.load("./background.png").convert()
+    img = pygame.image.load("./backgroundStopSigns.png").convert()
     os.environ['SDL_VIDEO_WINDOW_POS'] = f"{(screen_width - 1180) // 2},{(screen_height - 800) // 2}"
     screen_width, screen_height = screen.get_width(), screen.get_height()
     img_width, img_height = img.get_width(), img.get_height()
