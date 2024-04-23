@@ -110,14 +110,13 @@ def GenerateCars(list: list[Car], intersection: Intersection):
         lane_num = random.randint(0, rand_road.num_lanes - 1)
         newCar = CreateCar(image, SPEED, intersection, rand_road, lane_num)
         collided_sprites = pygame.sprite.spritecollide(newCar, list, False)
-        for collided_car in collided_sprites:
-            print(collided_car.rect)
-            print((collided_car.x,collided_car.y))
-            print("Collision detected!")
-            print("New Car Position: (", newCar.x, ", ", newCar.y, ")")
-            print("Collided Car Position: (", collided_car.x, ", ", collided_car.y, ")")  
-            collided_car.kill()
-        list.add(newCar)
+        if len(collided_sprites) != 0:
+            print("Collision Detected!")
+            for car in collided_sprites:
+                print(car.rect)
+            newCar.kill()
+        else:
+            list.add(newCar)
     return list
 # TO DO: we should also have a method that deletes cars if they are out of the screen.
 def DeleteCars(list: list[Car]):
