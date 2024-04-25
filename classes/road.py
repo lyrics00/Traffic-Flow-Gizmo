@@ -12,6 +12,7 @@ class Lane(pygame.sprite.Sprite):
         self.orientation = orientation
         self.turn_direction = turn_direction
         self.restriction_time = restriction_time
+        self.stopSignLine=0
         self.time = 0
     def updateTimer(self, FPS):
             self.time += clock.tick(FPS)
@@ -36,7 +37,7 @@ class Lane(pygame.sprite.Sprite):
 
 # Define the Road class
 class Road(pygame.sprite.Sprite):
-    def __init__(self, num_lanes: int, lane_height: int, lane_width: int, road_x_position: int, road_y_position: int, lane_directions: list[str], orientation: str, restriction_time: float):
+    def __init__(self, num_lanes: int, lane_height: int, lane_width: int, road_x_position: int, road_y_position: int, lane_directions: list[str], orientation: str, restriction_time: float, stopSignLine):
         super().__init__()
         # Light gray color for the road background
         self.num_lanes = num_lanes
@@ -48,6 +49,9 @@ class Road(pygame.sprite.Sprite):
         self.orientation = orientation  # Angle in degrees for the road's direction
         self.restriction_time = restriction_time
         self.lanes = self.create_lanes()
+        arrlanes = self.getLanes()
+        self.stopSignLine= stopSignLine
+        self.time=0
     def getLanes(self):
         lane_sprites = self.lanes.sprites()  # Get a list of Lane sprites from the Group
     # Check if there are any Lane sprites in the list
@@ -59,6 +63,7 @@ class Road(pygame.sprite.Sprite):
         lanes = pygame.sprite.Group()
         for i in range(self.num_lanes):
             if self.orientation == 'up':
+                self.stopSignLine= 700
                 if self.lane_directions[i] == 'straight-right' or self.lane_directions[i] == 'right' or self.lane_directions[i] == 'left' or self.lane_directions[i] == 'straight':
                     lane = Lane(i, (i * self.lane_width) + self.road_x_position, self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.restriction_time, self.lane_directions[i])
                     lanes.add(lane)
@@ -66,6 +71,7 @@ class Road(pygame.sprite.Sprite):
                     lane = Lane(i, (i * self.lane_width) + self.road_x_position, self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.restriction_time, turn_direction="straight")
                     lanes.add(lane)
             elif self.orientation == 'right':
+                self.stopSignLine=125
                 if self.lane_directions[i] == 'straight-right' or self.lane_directions[i] == 'right' or self.lane_directions[i] == 'left' or self.lane_directions[i] == 'straight':
                     lane = Lane(i, self.road_x_position, (i * self.lane_height) + self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.restriction_time, self.lane_directions[i])
                     lanes.add(lane)
@@ -73,6 +79,7 @@ class Road(pygame.sprite.Sprite):
                     lane = Lane(i, self.road_x_position, (i * self.lane_height) + self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.restriction_time, turn_direction="straight")
                     lanes.add(lane)
             elif self.orientation == 'down':
+                self.stopSignLine=400
                 if self.lane_directions[i] == 'straight-right' or self.lane_directions[i] == 'right' or self.lane_directions[i] == 'left' or self.lane_directions[i] == 'straight':
                     lane = Lane(i, -(i * self.lane_width) + self.road_x_position, self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.restriction_time, self.lane_directions[i])
                     lanes.add(lane)
@@ -80,6 +87,7 @@ class Road(pygame.sprite.Sprite):
                     lane = Lane(i, -(i * self.lane_width) + self.road_x_position, self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.restriction_time, turn_direction="straight")
                     lanes.add(lane)
             elif self.orientation == 'left':
+                self.stopSignLine=900
                 if self.lane_directions[i] == 'straight-right' or self.lane_directions[i] == 'right' or self.lane_directions[i] == 'left' or self.lane_directions[i] == 'straight':
                     lane = Lane(i, self.road_x_position, -(i * self.lane_height) + self.road_y_position, self.lane_width, self.lane_height, self.orientation, self.restriction_time, self.lane_directions[i])
                     lanes.add(lane)

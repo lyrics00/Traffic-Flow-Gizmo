@@ -30,10 +30,10 @@ def run_game(screen, bg, sliderimg, sliderrect, clock):
     pygame.display.set_caption('Gizmo')# fix indentation
     #lane width is 120 pixels
     # def __init__(self, num_lanes: int, lane_height: int, lane_width: int, road_x_position: int, road_y_position: int, lane_directions: list[str], orientation: str):
-    road1 = Road(num_lanes=3, lane_height=100, lane_width=110, road_x_position=470, road_y_position=-250, lane_directions=["straight", "straight", "straight"], orientation="down", restriction_time= 1000.0)
-    road2 = Road(num_lanes=1, lane_height=100, lane_width=110, road_x_position=1130, road_y_position=310, lane_directions=["straight"], orientation="left", restriction_time= 2000.0)
-    road3 = Road(num_lanes=3, lane_height=100, lane_width=100, road_x_position=630, road_y_position=800, lane_directions=["straight", "straight", "straight"], orientation="up", restriction_time= 1000.0)
-    road4 = Road(num_lanes=1, lane_height=100, lane_width=100, road_x_position=-300, road_y_position=400, lane_directions=["straight"], orientation="right", restriction_time= 2000.0)
+    road1 = Road(num_lanes=3, lane_height=100, lane_width=110, road_x_position=470, road_y_position=-250, lane_directions=["straight", "straight", "straight"], orientation="down", restriction_time= 1000.0, stopSignLine= 100)
+    road2 = Road(num_lanes=1, lane_height=100, lane_width=110, road_x_position=1130, road_y_position=310, lane_directions=["straight"], orientation="left", restriction_time= 2000.0, stopSignLine= 900)
+    road3 = Road(num_lanes=3, lane_height=100, lane_width=100, road_x_position=630, road_y_position=800, lane_directions=["straight", "straight", "straight"], orientation="up", restriction_time= 1000.0, stopSignLine=540)
+    road4 = Road(num_lanes=1, lane_height=100, lane_width=100, road_x_position=-300, road_y_position=400, lane_directions=["straight"], orientation="right", restriction_time= 2000.0, stopSignLine=100)
     # Assuming road1.lanes is a Group containing Lane sprites
     intersection1 = Intersection()
     intersection1.add_road(road1)
@@ -62,18 +62,6 @@ def run_game(screen, bg, sliderimg, sliderrect, clock):
         pygame.display.update()
         clock.tick(60)
         screen.blit(bg, (0, 0))
-        '''
-        c1.Show(screen)  
-        c2.Show(screen)
-        c3.Show(screen)
-        c4.Show(screen)
-        c1.Move()
-        c2.Move()
-        c3.Move()
-        c4.Move()
-        update()
-        Theoretically, we should just have a update function in the loop that organizes everything we want to update during each frame.
-        '''
         update(cars, intersection1, sliderrect)
         bgrect = bg.get_rect()
         screen.blit(sliderimg, (bgrect.width, 0))
@@ -88,8 +76,9 @@ def update(list: list[Car], intersection: Intersection, sliderrect):
 
     for i in list:
 
-            i.Move()
+            i.Move(list)
             i.ShowScreen(screen, i.image)
+            i.StopSignStop()
     list = DeleteCars(list, sliderrect)
         #we should also have a method that deletes cars if they are out of the screen.
 # TO DO: we should have a function that creates a car on the lane we want with a probabilistic image.
