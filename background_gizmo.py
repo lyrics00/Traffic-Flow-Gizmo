@@ -20,6 +20,6 @@ def background_setup(screen, flags, bpp):
     pygame.mouse.set_visible(0)
     pygame.display.set_caption('Gizmo')
     
-    screen.blit(img, (img_x, img_y))
+    # screen.blit(img, (img_x, img_y))
     
     return screen, img, img_x, img_y, clock

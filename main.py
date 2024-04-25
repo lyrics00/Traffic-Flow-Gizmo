@@ -8,13 +8,14 @@ from pygame.sprite import Sprite, Group
 import random
 pygame.init()
 from pygame.locals import *
+import tkinter as tk
 flags = DOUBLEBUF
 #  actual resolution is (1180, 800)
-screen, bg, img_x, img_y, clock = background_setup((1180, 800), flags, 16)
+screen, bg, sliderimg, slider, clock = background_setup((1480, 800), flags, 16)
 screen.set_alpha(None)
-cimg1 = pygame.image.load("car1.png").convert()
+cimg1 = pygame.image.load("car1.png").convert_alpha()
 cimg1rect = cimg1.get_rect()
-cimg2 = pygame.image.load("car2.png").convert()
+cimg2 = pygame.image.load("car2.png").convert_alpha()
 cimg2rect = cimg1.get_rect()
 SPEED = 1.5
 FPS = 60
@@ -24,13 +25,13 @@ FPS = 60
 '''
 # Your main game logic goes here
 # For example
-def run_game(screen, bg, img_x, img_y, clock):
+def run_game(screen, bg, sliderimg, sliderrect, clock):
     pygame.mouse.set_visible(0)
     pygame.display.set_caption('Gizmo')# fix indentation
     #lane width is 120 pixels
     # def __init__(self, num_lanes: int, lane_height: int, lane_width: int, road_x_position: int, road_y_position: int, lane_directions: list[str], orientation: str):
     road1 = Road(num_lanes=3, lane_height=100, lane_width=110, road_x_position=470, road_y_position=-250, lane_directions=["straight", "straight", "straight"], orientation="down", restriction_time= 1000.0)
-    road2 = Road(num_lanes=1, lane_height=100, lane_width=110, road_x_position=1050, road_y_position=310, lane_directions=["straight"], orientation="left", restriction_time= 2000.0)
+    road2 = Road(num_lanes=1, lane_height=100, lane_width=110, road_x_position=1130, road_y_position=310, lane_directions=["straight"], orientation="left", restriction_time= 2000.0)
     road3 = Road(num_lanes=3, lane_height=100, lane_width=100, road_x_position=630, road_y_position=800, lane_directions=["straight", "straight", "straight"], orientation="up", restriction_time= 1000.0)
     road4 = Road(num_lanes=1, lane_height=100, lane_width=100, road_x_position=-300, road_y_position=400, lane_directions=["straight"], orientation="right", restriction_time= 2000.0)
     # Assuming road1.lanes is a Group containing Lane sprites
@@ -60,7 +61,7 @@ def run_game(screen, bg, img_x, img_y, clock):
     while True:
         pygame.display.update()
         clock.tick(60)
-        screen.blit(bg, (img_x, img_y))
+        screen.blit(bg, (0, 0))
         '''
         c1.Show(screen)  
         c2.Show(screen)
@@ -73,25 +74,23 @@ def run_game(screen, bg, img_x, img_y, clock):
         update()
         Theoretically, we should just have a update function in the loop that organizes everything we want to update during each frame.
         '''
-        update(cars, intersection1)
+        update(cars, intersection1, sliderrect)
+        bgrect = bg.get_rect()
+        screen.blit(sliderimg, (bgrect.width, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                     sys.exit()
             pygame.display.update(cimg1rect)
             pygame.display.update(cimg2rect)
-def update(list: list[Car], intersection: Intersection):
+def update(list: list[Car], intersection: Intersection, sliderrect):
      #This method should import random to have a certain probability of a random car being generated and starts moving, should store a list of all the cars
     list= GenerateCars(list, intersection=intersection)
 
     for i in list:
-            car = i
-            list.remove(i)
-            i.kill
-            list.add(car)
 
             i.Move()
             i.ShowScreen(screen, i.image)
-    list = DeleteCars(list)
+    list = DeleteCars(list, sliderrect)
         #we should also have a method that deletes cars if they are out of the screen.
 # TO DO: we should have a function that creates a car on the lane we want with a probabilistic image.
 def CreateCar(imageFile, speed, intersection: Intersection, road: Road, lane_num: int):
@@ -119,16 +118,11 @@ def GenerateCars(list: list[Car], intersection: Intersection):
             list.add(newCar)
     return list
 # TO DO: we should also have a method that deletes cars if they are out of the screen.
-def DeleteCars(list: list[Car]):
+def DeleteCars(list: list[Car], sliderrect):
     for car in list:
         [screen_x, screen_y] = screen.get_size()
-        if screen_x + 500 < car.x or -500 > car.x or car.y > screen_y + 500 or car.y < -500:
+        if screen_x - sliderrect.width < car.x or -500 > car.x or car.y > screen_y or car.y < -500:
             list.remove(car)
             car.kill()
     return list
-    
-
-
-
-
-run_game(screen, bg, img_x, img_y, clock)
+run_game(screen, bg, sliderimg, slider, clock)
