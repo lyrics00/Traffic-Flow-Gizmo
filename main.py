@@ -11,7 +11,7 @@ from pygame.locals import *
 import tkinter as tk
 flags = DOUBLEBUF
 #  actual resolution is (1180, 800)
-screen, bg, sliderimg, slider, clock = background_setup((1480, 800), flags, 16)
+screen, bg, sliderimg, slider, clock = background_setup((1580, 800), flags, 16)
 screen.set_alpha(None)
 cimg1 = pygame.image.load("car1.png").convert_alpha()
 cimg1rect = cimg1.get_rect()
@@ -19,8 +19,6 @@ cimg2 = pygame.image.load("car2.png").convert_alpha()
 cimg2rect = cimg1.get_rect()
 SPEED = 1.5
 FPS = 60
-ommuteTime = 15
-commuteTimeList =[15]
 '''
     initialize()
     theoretically, we want a function that will initialize the screen with the background and the roads.
@@ -32,10 +30,10 @@ def run_game(screen, bg, sliderimg, sliderrect, clock):
     pygame.display.set_caption('Gizmo')# fix indentation
     #lane width is 120 pixels
     # def __init__(self, num_lanes: int, lane_height: int, lane_width: int, road_x_position: int, road_y_position: int, lane_directions: list[str], orientation: str):
-    road1 = Road(num_lanes=3, lane_height=100, lane_width=110, road_x_position=470, road_y_position=-250, lane_directions=["straight", "straight", "straight"], orientation="down", restriction_time= 1000.0, stopSignLine= 100)
-    road2 = Road(num_lanes=1, lane_height=100, lane_width=110, road_x_position=1130, road_y_position=310, lane_directions=["straight"], orientation="left", restriction_time= 2000.0, stopSignLine= 900)
-    road3 = Road(num_lanes=3, lane_height=100, lane_width=100, road_x_position=630, road_y_position=800, lane_directions=["straight", "straight", "straight"], orientation="up", restriction_time= 1000.0, stopSignLine=540)
-    road4 = Road(num_lanes=1, lane_height=100, lane_width=100, road_x_position=-300, road_y_position=400, lane_directions=["straight"], orientation="right", restriction_time= 2000.0, stopSignLine=100)
+    road1 = Road(num_lanes=3, lane_height=100, lane_width=110, road_x_position=520, road_y_position=-250, lane_directions=["straight", "straight", "straight"], orientation="down", restriction_time= 1000.0, stopSignLine= 100)
+    road2 = Road(num_lanes=1, lane_height=110, lane_width=110, road_x_position=1180, road_y_position=325, lane_directions=["straight"], orientation="left", restriction_time= 2000.0, stopSignLine= 980)
+    road3 = Road(num_lanes=3, lane_height=100, lane_width=110, road_x_position=690, road_y_position=800, lane_directions=["straight", "straight", "straight"], orientation="up", restriction_time= 1000.0, stopSignLine=550)
+    road4 = Road(num_lanes=1, lane_height=110, lane_width=100, road_x_position=-350, road_y_position=415, lane_directions=["straight"], orientation="right", restriction_time= 2000.0, stopSignLine=115)
     # Assuming road1.lanes is a Group containing Lane sprites
     intersection1 = Intersection()
     intersection1.add_road(road1)
@@ -46,13 +44,13 @@ def run_game(screen, bg, sliderimg, sliderrect, clock):
 # Check if there are any Lane sprites in the list
     # def __init__ (self, imageFile, x, y, speed, intersection: Intersection, road: Road, lane_num: int):
     cars = pygame.sprite.Group()
-    c1 = Car(cimg1, speed=SPEED, intersection=intersection1, road=road1, lane_num=0,startTime = pygame.time.get_ticks())
+    c1 = Car(cimg1, speed=SPEED, intersection=intersection1, road=road1, lane_num=0)
     cars.add(c1)
-    c2 = Car(cimg2, speed=SPEED, intersection=intersection1, road=road2, lane_num=0,startTime = pygame.time.get_ticks())
+    c2 = Car(cimg2, speed=SPEED, intersection=intersection1, road=road2, lane_num=0)
     cars.add(c2)
-    c3 = Car(cimg1, speed=SPEED, intersection=intersection1, road=road3, lane_num=0,startTime = pygame.time.get_ticks())
+    c3 = Car(cimg1, speed=SPEED, intersection=intersection1, road=road3, lane_num=0)
     cars.add(c3)
-    c4 = Car(cimg2, speed=SPEED, intersection=intersection1, road=road4, lane_num=0,startTime = pygame.time.get_ticks())
+    c4 = Car(cimg2, speed=SPEED, intersection=intersection1, road=road4, lane_num=0)
     cars.add(c4)
     # Start all car threads
 
@@ -63,9 +61,8 @@ def run_game(screen, bg, sliderimg, sliderrect, clock):
     while True:
         pygame.display.update()
         clock.tick(60)
-        screen.blit(bg, (0, 0))
+        screen.blit(bg, (50, 0))
         update(cars, intersection1, sliderrect)
-        updateCommuteTime()
         bgrect = bg.get_rect()
         screen.blit(sliderimg, (bgrect.width, 0))
         for event in pygame.event.get():
@@ -87,7 +84,7 @@ def update(list: list[Car], intersection: Intersection, sliderrect):
 # TO DO: we should have a function that creates a car on the lane we want with a probabilistic image.
 def CreateCar(imageFile, speed, intersection: Intersection, road: Road, lane_num: int):
     image = pygame.image.load(imageFile).convert_alpha()
-    newCar = Car(image, speed, intersection, road, lane_num,pygame.time.get_ticks())
+    newCar = Car(image, speed, intersection, road, lane_num)
     return newCar
 # TO DO: This method should import random to have a certain probability of a random car being generated and starts moving, should store a list of all the cars
 def GenerateCars(list: list[Car], intersection: Intersection):
@@ -114,18 +111,7 @@ def DeleteCars(list: list[Car], sliderrect):
     for car in list:
         [screen_x, screen_y] = screen.get_size()
         if screen_x - sliderrect.width < car.x or -500 > car.x or car.y > screen_y or car.y < -500:
-            commuteTime = (pygame.time.get_ticks()- car.startTime)/1000
-            commuteTimeList.append(commuteTime)
             list.remove(car)
             car.kill()
     return list
-
-def updateCommuteTime():
-    font = pygame.font.Font('freesansbold.ttf', 12)
-
-    text = font.render('Average Commute Time: ' + str(int(sum(commuteTimeList)/len(commuteTimeList))) + ' minutes', True, (0, 0, 128))
-    textRect = text.get_rect()
-    textRect.center = (960, 10)
-    screen.blit(text, textRect.center)
-
 run_game(screen, bg, sliderimg, slider, clock)
