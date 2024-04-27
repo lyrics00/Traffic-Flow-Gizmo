@@ -4,7 +4,7 @@ from classes.road import Intersection, Road, Lane
 import time
 
 class Car(pygame.sprite.Sprite):
-    def __init__ (self, imageFile, speed, intersection: Intersection, road: Road, lane_num: int):
+    def __init__ (self, imageFile, speed, intersection: Intersection, road: Road, lane_num: int, startTime: int):
         super().__init__()
         self.speed = speed
         self.image = imageFile #300 by 400 pixels
@@ -25,6 +25,7 @@ class Car(pygame.sprite.Sprite):
         self.stop=False
         self.stop_cooldown=2
         self.last_stop_time=time.time()
+        self.startTime = startTime
         # Center the rotated image
         # Blit the rotated image onto the screen
     def ShowScreen(self, surface, rotated_image):
