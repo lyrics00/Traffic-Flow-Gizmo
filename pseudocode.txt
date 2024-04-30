@@ -1,13 +1,82 @@
-we pseudocoding
+########################################
+UI/Visuals
+########################################
+background
+    //place both backgrounds
+    roadWithoutStopSigns = x width, y height
+    show(roadWithoutStopSigns)
+    roadWithStopSigns = x width, y height
+    hide(roadWithStopSigns)
 
+traffic lights
+    //place invisible traffic lights at each intersection
+    trafficLights[8]
+    set each light to a lane before the intersection
+    make traffic light at the start of the intersection for each lane
+    hide(trafficLights)
+
+STOP SIGNS TAB
+if(stopSignTab)
+    if(buttonForStopSigns==pressed):
+        show(stopSigns)
+        stopSigns=true
+TRAFFIC LIGHTS TAB
+if(trafficLightsTab)
+    trafficLights=true
+    hide(roadWithStopSigns)
+    show(roadWithoutStopSigns)
+    show(trafficLights[0,3,6,9])
+    if(buttonForStopLights==pressed):
+        show(light)
+
+AVERAGE COMMUTE TIME
+Create text box on right side of screen with arbitrary minimum commute time (ex. 10 minutes) for students to strive toward
+Create text box showing - : - for no current average time. Once an average time is calculated, show that instead and update it constantly. 
+for(time running)
+Calculate averageCommuteTime for a list of all cars on screen
+// visual idea: the average commute time can be printed in a certain color denoting how close they are to the minimum (red -> orange -> yellow -> green)
+loop = True
+start_time = None
+clock = pygame.time.Clock()
+while loop:
+    //need to finish
+
+    if start_time:
+        time_since_enter = pygame.time.get_ticks() - start_time
+        screen.blit(FONT.render(message, True, TEXT_COLOR), (20, 20))
+
+    pygame.display.flip()
+    clock.tick(60)
+
+
+//updates the global variables that the student changed
+update:
+redTime = position of red light slider
+yellowTime = position of yellow light slider
+greenTime = position of green light slider
+
+
+
+
+
+########################################
+Cars
+########################################
+int distanceToIntersection
+code for stop signs
+if(stopSigns)
+	if (distanceToIntersection<stoppingDistance)
+		
 code for checking if two cars have collided: 
     calculate minimumPosition and maximumPosition using certain distance factor (ex. 30 pixels) // since position is denoted from the center of the car, 
-                                                                                                // we need to account for the space the car actually takes up
-    if car1's x position >= car2's minimumPosition && car1's x position <= car2's maximumPosition:
+// we need to account for the space the car actually takes up
+    if car1's x position >= car2's minimumPosition && car1's x position <= car2's
+maximumPosition:
         stop movements of both cars
         stop all gizmo processes
         show crash image
         put up error message that a crash has occurred, prompt the student to try again and restart the gizmo 
+
 
 code for "placing" stop signs/traffic light:
     student clicks on the stop sign/traffic light graphic
@@ -15,28 +84,52 @@ code for "placing" stop signs/traffic light:
     if student clicks again the stop sign/traffic light goes to another prespecified location
     (this plan eliminates any complexity associated with dragging and dropping)
 
-code for calculating average commute time:
-    create arbitrary minimum commute time (ex. 10 minutes) for students to strive toward
-    for each car:
-        count the amount of time the car waits at the red light
-    find average time from all cars
 
-    // visual idea: the average commute time can be printed in a certain color denoting how close they are to the minimum (red -> orange -> yellow -> green)
+
+code for calculating individual commute time:
+    for time on screen:
+        commuteTime++
+
 
 code for turning car left or right:
-    deltaTheta = 90 (or -90 depending on direction)
-    while (counter < 90) (or counter > -90)
+
+Turning car left:
+    deltaTheta = 90 
+    counter = 0;
+    while (counter < deltaTheta)
         car.angle += 10 (or another number that creates a smoother-looking turn)
         counter += 10
-        car.show 
+
+
+Turning car right:
+    deltaTheta = -90 
+    counter = 0;
+    while (counter > deltaTheta)
+        car.angle -= 10 (or another number that creates a smoother-looking turn)
+        counter -= 10
 
         (idk if this makes sense)
 
-code for car movement depending on light color:
-    TO BE WRITTEN
+Pygame commands: pygame.transform.rotate(angle), angle is a float that is positive counterclockwise, negative clockwise
 
-code to speed up/slow down car:
-    
+
+code for car movement depending on light color:
+if(trafficLights==true)
+(assuming speed stays same when light is green; 0 = red, 1 = yellow, 2 = green)
+int factor; // factor that the speed reduces by
+if trafficLightColor == 0:
+	distanceToIntersection=velocity-1/2at^
+	
+			
+else if trafficLightColor == 1:
+	// if the car cannot make the yellow or a car is stopped in front
+		// insert kinematic equation to stop the car at the line
+	// else 
+			// car keeps continuing through (at same speed?)
+
+
+code to accelerate car:
+
 
 code for car generation in each lane:
     for the highway straight lanes:
@@ -51,3 +144,38 @@ code for car generation in each lane:
     for the side road straight/right:
         a car is generated once every x seconds, where x is a uniform continuous RV
         between 8 to 12 seconds
+
+
+code for deciding straight or turn:
+on the highway’s straight/right-turn lanes:
+	the car has a 30% chance of turning right, 70% chance of going straight
+	Value = randInt(1,10)
+	if (value <= 7)
+		car will go straight
+	Else
+		Car will turn right
+on the side roads’ straight/right-turn lanes:
+	the car has a 60% chance of turning right, 40% chance of going straight
+	Value = randInt(1,10)
+	if (value <= 5)
+		car will go straight
+	Else
+		Car will turn right
+
+code for car-car interactions
+
+if the lane light changes from red to green:
+	if the car is at the front of the lane: 
+		if the car is going straight:
+			accelerate until max speed is reached or it comes within 5 feet
+                       else if the car is turning:
+			accelerate until it crosses the stop line, then turn
+	if the car is behind another:
+		once the distance between the two cars is > critical distance, do the same thing                                                                      m                     as if it was at the front of the lane. 
+
+Code for stop signs:
+Coordinate lines for stop signs:
+Down: y = 260
+Up: y = 555
+Right: x = 225 
+Left: x = 950
